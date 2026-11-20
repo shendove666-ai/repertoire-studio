@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Repertoire Catalog &mdash; Repertoire Studio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Repertoire &amp; Form Catalog</h1>
+        <p>Harmonic keys, formal structures, technical focus areas, and cumulative practice hours.</p>
+    </div>
+    <a href="{{ url_for('add_piece') }}" class="btn">+ Add New Work</a>
+</div>
+
+<form method="get" class="filter-bar">
+    <input type="text" name="q" id="quickFilterInput" value="{{ query_text }}" class="form-control" style="max-width: 280px;" aria-label="Search works">
+    <select name="status" class="form-control" style="max-width: 200px;">
+        <option value="All" {% if status_filter == 'All' %}selected{% endif %}>All Mastery Stages</option>
+        <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+        <option value="Polishing" {% if status_filter == 'Polishing' %}selected{% endif %}>Polishing</option>
+        <option value="Performance Ready" {% if status_filter == 'Performance Ready' %}selected{% endif %}>Performance Ready</option>
+    </select>
+    <button type="submit" class="btn btn-outline">Filter</button>
+</form>
+
+<div class="panel-card" style="overflow-x: auto;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Work &amp; Composer</th>
+                <th>Key &amp; Form</th>
+                <th>Technical Focus</th>
+                <th>Practice</th>
+                <th>Mastery Stage</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for work in works %}
+                <tr class="repertoire-row">
+                    <td>
+                        <strong>{{ work['title'] }}</strong> ({{ work['opus_catalog'] }})<br>
+                        <span style="color: var(--ink-secondary); font-size: 0.86rem;">{{ work['composer'] }} &middot; Level {{ work['difficulty'] }}/5</span>
+                    </td>
+                    <td>
+                        <strong>{{ work['musical_key'] }}</strong><br>
+                        <span style="color: var(--ink-secondary); font-size: 0.86rem;">{{ work['musical_form'] }}</span>
+                    </td>
+                    <td style="max-width: 260px; font-size: 0.88rem;">
+                        {{ work['technical_focus'] }}
+                        {% if work['notes'] %}
+                            <div style="color: var(--ink-secondary); font-size: 0.82rem; margin-top: 0.25rem;">Note: {{ work['notes'] }}</div>
+                        {% endif %}
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <strong>{{ work['logged_minutes'] }} min</strong><br>
+                        <span style="color: var(--ink-secondary); font-size: 0.82rem;">{{ work['session_count'] }} sessions</span>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('update_piece_status', piece_id=work['id']) }}" method="post">
+                            <select name="mastery_status" onchange="this.form.submit()" class="form-control" style="padding: 0.3rem 0.5rem; font-size: 0.84rem;">
+                                <option value="In Progress" {% if work['mastery_status'] == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Polishing" {% if work['mastery_status'] == 'Polishing' %}selected{% endif %}>Polishing</option>
+                                <option value="Performance Ready" {% if work['mastery_status'] == 'Performance Ready' %}selected{% endif %}>Performance Ready</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('delete_piece', piece_id=work['id']) }}" method="post">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

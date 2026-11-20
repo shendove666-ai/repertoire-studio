@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% block title %}Studio Dashboard &mdash; Repertoire Studio{% endblock %}
+
+{% block content %}
+{% if not g.user %}
+    <section class="hero-section">
+        <h1>Structured Practice &amp; Musical Form Tracking for Classical Pianists</h1>
+        <p>
+            Repertoire Studio organizes active piano works by harmonic key, formal architecture,
+            and technical challenges, pairing daily tempo and measure-level practice logs with
+            longitudinal time analytics.
+        </p>
+        <div style="display: flex; gap: 0.9rem;">
+            <a href="{{ url_for('login') }}" class="btn">Enter Studio</a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline">Create Account</a>
+        </div>
+        <div class="demo-hint">
+            <strong>Pre-populated Studio Account:</strong> Username <code>{{ config['SEED_USERNAME'] }}</code> &middot; Password <code>{{ config['SEED_PASSWORD'] }}</code>
+        </div>
+    </section>
+{% else %}
+    <div class="page-header">
+        <div>
+            <h1>Studio Overview</h1>
+            <p>Active repertoire summary and recent measure-level practice logs.</p>
+        </div>
+        <a href="{{ url_for('add_piece') }}" class="btn">+ Add Repertoire Work</a>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Cataloged Works</div>
+            <div class="kpi-value">{{ summary['total_pieces'] }}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Performance Ready</div>
+            <div class="kpi-value">{{ summary['ready_pieces'] }}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Logged Practice (Min)</div>
+            <div class="kpi-value">{{ summary['total_minutes'] }}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Practice Sessions</div>
+            <div class="kpi-value">{{ summary['total_sessions'] }}</div>
+        </div>
+    </div>
+
+    <div class="two-col-grid">
+        <section class="panel-card">
+            <h2>Record Practice Session</h2>
+            <form action="{{ url_for('log_practice') }}" method="post">
+                <div class="form-group">
+                    <label for="piece_id">Repertoire Work</label>
+                    <select name="piece_id" id="piece_id" class="form-control" required>
+                        {% for piece in pieces %}
+                            <option value="{{ piece['id'] }}">{{ piece['composer'] }} &mdash; {{ piece['title'] }} ({{ piece['opus_catalog'] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="duration_minutes">Duration (Minutes)</label>
+                        <input type="number" name="duration_minutes" id="duration_minutes" class="form-control" min="1" max="480" value="45" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="target_bpm">Target Tempo (BPM)</label>
+                        <input type="number" name="target_bpm" id="target_bpm" class="form-control" min="20" max="300" value="108" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="measure_range">Measure Range</label>
+                        <input type="text" name="measure_range" id="measure_range" class="form-control" value="mm. 1-32" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="practiced_on">Session Date</label>
+                        <input type="date" name="practiced_on" id="practiced_on" class="form-control" value="{{ today_str }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="session_notes">Technical &amp; Musical Notes</label>
+                    <textarea name="session_notes" id="session_notes" rows="3" class="form-control" required>Voicing clarity and rhythmic stability across transitions.</textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Save Practice Log</button>
+            </form>
+        </section>
+
+        <section class="panel-card">
+            <h2>Recent Practice Logs</h2>
+            {% if recent_logs %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Work &amp; Measures</th>
+                            <th>Tempo</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in recent_logs %}
+                            <tr>
+                                <td style="white-space: nowrap;">{{ log['practiced_on'] }}</td>
+                                <td>
+                                    <strong>{{ log['title'] }}</strong> ({{ log['opus_catalog'] }})<br>
+                                    <span style="font-size: 0.84rem; color: var(--ink-secondary);">
+                                        {{ log['measure_range'] }} &middot; {{ log['session_notes'] }}
+                                    </span>
+                                </td>
+                                <td>{{ log['target_bpm'] }} BPM</td>
+                                <td><strong>{{ log['duration_minutes'] }} min</strong></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: var(--ink-secondary);">No practice sessions recorded yet.</p>
+            {% endif %}
+        </section>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Practice Analytics &mdash; Repertoire Studio{% endblock %}
+
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Practice Time &amp; Composer Analytics</h1>
+        <p>SQL-aggregated distribution of practice minutes across composers and recent sessions.</p>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <section class="panel-card">
+        <h3>Cumulative Practice Minutes by Composer</h3>
+        <canvas id="composerChart" height="220"></canvas>
+    </section>
+    <section class="panel-card">
+        <h3>Daily Practice Trajectory</h3>
+        <canvas id="dailyChart" height="220"></canvas>
+    </section>
+</div>
+{% endblock %}

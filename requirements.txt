@@ -1,0 +1,6 @@
+# Application runtime
+Flask>=3.0.0
+Werkzeug>=3.0.0
+
+# Test runner
+pytest>=8.0.0
