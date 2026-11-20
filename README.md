@@ -15,6 +15,16 @@ python demo.py
 
 Open <http://127.0.0.1:5000> and use the prefilled demo sign-in. The launcher binds to loopback with debugging disabled and generates a fresh signing key. It creates a separate temporary database containing five sample works and seven synthetic sessions. Exit normally with Ctrl+C to discard that database. The launcher leaves any existing `repertoire.db` alone. Chart.js 4.4.3 is loaded from jsDelivr, so the charts require access to that CDN.
 
+## Interface Preview
+
+These screenshots show Repertoire Studio with synthetic data from the `studio-demo` account.
+
+![Studio overview with five works, 170 minutes of practice, and the practice log form](screenshots/1-studio-overview.png)
+
+![Repertoire catalog with search, mastery filters, and musical form details](screenshots/2-repertoire-catalog.png)
+
+![Practice analytics with minutes by composer and daily practice trends](screenshots/3-practice-analytics.png)
+
 ## Run the original local studio
 
 ```powershell
