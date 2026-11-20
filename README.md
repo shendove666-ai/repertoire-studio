@@ -2,7 +2,7 @@
 
 Repertoire Studio is a Flask application for cataloging classical piano works, recording practice sessions, and reviewing practice time. The catalog records key, form, difficulty, and technical focus. Session records link a work to a date, duration, a measure range, a target tempo, and a practice note.
 
-I built the project from a pianist's workflow. A session on the inner voice of a fugue or an octave passage in a polonaise is easier to review when the score location and practice objective are recorded alongside the minutes.
+I built the project from a pianist's workflow. A 45-minute practice log becomes useful for the next session when it records which measures I worked on and the tempo I was aiming for.
 
 ## Run the synthetic demo
 
@@ -17,7 +17,7 @@ Open <http://127.0.0.1:5000> and use the prefilled demo sign-in. The launcher bi
 
 ## Interface Preview
 
-These screenshots show Repertoire Studio with synthetic data from the `studio-demo` account.
+The `studio-demo` account uses synthetic data. The screenshots follow one workflow: log a session, find the work in the catalog, and review practice time.
 
 ![Studio overview with five works, 170 minutes of practice, and the practice log form](screenshots/1-studio-overview.png)
 
@@ -33,7 +33,7 @@ python -m flask --app app run
 
 This entry point still uses `repertoire.db` at the project root. On a missing database path, Flask applies `schema.sql` and inserts the original first-run examples. You can sign in with the example account shown on the local landing page or create a separate account.
 
-Keep the original startup local. It has built-in example credentials and a development signing-key fallback. Treat the original examples as unverified for publication until their provenance is confirmed. Store personal practice data and snapshots outside the public repository. The schema contains destructive reset statements and is intended for a newly created database. An existing empty file will not be initialized by the current startup check.
+For a first walkthrough, run `python demo.py`. Use the original entry point for local work with `repertoire.db`. It retains built-in example credentials and a development signing-key fallback. Treat the original examples as unverified for publication until their provenance is confirmed. Store personal practice data and snapshots outside the public repository. The schema contains destructive reset statements and is intended for a newly created database. An existing empty file will not be initialized by the current startup check.
 
 Run tests from an isolated checkout so module import uses a disposable default database.
 
@@ -60,7 +60,7 @@ The catalog and composer totals use left joins so works with no logged minutes r
 | JSON key | Measure | Current presentation |
 |---|---|---|
 | `composers` | Summed practice minutes grouped by stored composer label | Bar chart |
-| `daily` | Summed minutes over the first 14 observed dates in ascending order, with gaps omitted | Line chart |
+| `daily` | Total minutes on the earliest 14 dates with practice records. Dates without entries are skipped. | Line chart |
 | `forms` | Number of catalog works grouped by stored form label | Available in the API |
 
 Jinja renders the page and its canvases. The browser fetches the aggregated JSON and passes labels and values to Chart.js. Composer and form labels are grouped as entered. Minutes describe logged effort, target BPM is a practice goal, and mastery stages are self-reported.
