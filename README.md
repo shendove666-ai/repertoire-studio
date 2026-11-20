@@ -17,7 +17,7 @@ Open <http://127.0.0.1:5000> and use the prefilled demo sign-in. The launcher bi
 
 ## Interface Preview
 
-The `studio-demo` account uses synthetic data. The screenshots follow one workflow: log a session, find the work in the catalog, and review practice time.
+The disposable demo contains five sample works and seven synthetic practice sessions totaling 170 minutes. The screenshots show the local workflow for logging a session, browsing the repertoire, and reviewing logged practice time. The daily chart displays the earliest 14 dates with entries and skips dates without logs.
 
 ![Studio overview with five works, 170 minutes of practice, and the practice log form](screenshots/1-studio-overview.png)
 
